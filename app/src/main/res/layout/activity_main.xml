@@ -5,9 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="move"
+        android:id="@+id/btnMove"></Button>
 
     <HorizontalScrollView
         android:id="@+id/horizotalTop"
+        android:layout_below="@id/btnMove"
         android:layout_width="match_parent"
         android:layout_height="200dp">
 
@@ -45,9 +51,9 @@
         app:flingEnabled="true"
         app:hasClickableChildren="false"
         app:horizontalPanEnabled="true"
-        app:maxZoom="8"
+        app:maxZoom="6"
         app:maxZoomType="zoom"
-        app:minZoom="5"
+        app:minZoom="3"
         app:minZoomType="zoom"
         app:oneFingerScrollEnabled="true"
         app:overPinchable="true"

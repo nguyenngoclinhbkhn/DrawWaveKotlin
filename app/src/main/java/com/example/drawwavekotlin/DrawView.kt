@@ -16,11 +16,14 @@ class DrawView : ImageView {
     private var y: Float? = null
     private lateinit var bitmap: Bitmap
     private val ANGLE = 45
-    private val startY = 50
+    private val startY = 100f
     private val DISTANCE_DISTANCE = 150
     private var canvas: Canvas? = null
     private lateinit var list: ArrayList<PointCalendar>
     private lateinit var bottomRightList: ArrayList<PointCalendar>
+    private var bitmapMonth : Bitmap ?= null
+    private val widthBitmap = 100;
+    private val heightBitmap = 74
 
     constructor(context: Context) : this(context, null) {
         init()
@@ -40,16 +43,18 @@ class DrawView : ImageView {
 
     private fun init() {
         paintTab.color = Color.RED
-        paintTab.strokeWidth = 15f
+        paintTab.strokeWidth = 25f
         paintTab.style = Paint.Style.STROKE
         paintTab.isDither = true // set the dither to true
         paintTab.strokeJoin = Paint.Join.ROUND // set the join to round you want
         paintTab.strokeCap = Paint.Cap.ROUND // set the paint cap to round too
         paintTab.pathEffect = CornerPathEffect(20f)
         path = Path()
+        bitmapMonth = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.month),
+           widthBitmap, heightBitmap, true );
 //        canvas = Canvas()
         x = 50f
-        y = 300f
+        y = 400f
         list = ArrayList<PointCalendar>()
         bottomRightList = ArrayList<PointCalendar>()
         createListPoint()
@@ -61,13 +66,13 @@ class DrawView : ImageView {
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-//        bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-//        canvas = Canvas(bitmap)
+        bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        canvas = Canvas(bitmap)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val width = 5000
+        val width = 50000
         val height =
             MeasureSpec.getSize(heightMeasureSpec) // Since 3000 is bottom of last Rect to be drawn added and 50 for padding.
         setMeasuredDimension(width, height)
@@ -92,9 +97,12 @@ class DrawView : ImageView {
         var countDraw = 1
         var xBottomCornerLeft = x!!
         var yBottomCornerLeft = y!!
+        var xBitmap = 0f;
+
         //draw vertical down line
-        while (true) {
-            if (countDraw == 10) break
+        while (countDraw <= 50) {
+//            if (countDraw == 50) break
+            canvas?.drawBitmap(bitmapMonth!!, xBitmap, 0f,paintTab)
             Log.e("TAG", "Drawline ")
             path!!.lineTo(xBottomCornerLeft, yBottomCornerLeft)
             //draw corner bottom left
@@ -114,35 +122,40 @@ class DrawView : ImageView {
                     1 * (y!! + list.get(list.size - 1).y - bottomRightList[i].y)
                 )
             }
+
             // draw vertical up line
             val xBottomRight: Float =
                 bottomLeft + DISTANCE_DISTANCE + bottomRightList[bottomRightList.size - 1].x
             path!!.lineTo(
                 1 * (bottomLeft + DISTANCE_DISTANCE + bottomRightList.get(
                     bottomRightList.size - 1
-                ).x), 130f
+                ).x), 180f
             )
+            xBitmap = bottomLeft + DISTANCE_DISTANCE + bottomRightList[bottomRightList.size - 1].x / 2
+            canvas?.drawBitmap(bitmapMonth!!, xBitmap, 0f,paintTab)
+
             //draw corner top left
             for (i in list.indices) {
                 path!!.lineTo(
                     1 * (xBottomRight + list[i].x),
-                    130 - list.get(i).y
+                    180 - list.get(i).y
                 )
             }
             //draw horizontal top line
             val xTopLeft: Float =
                 xBottomRight + list.get(list.size - 1).x + DISTANCE_DISTANCE
-            path!!.lineTo(1 * xTopLeft, 50f)
+            path!!.lineTo(1 * xTopLeft, 100f)
             //draw corner top right
             for (i in bottomRightList.indices) {
                 path!!.lineTo(
                     1 * (xTopLeft + bottomRightList[i].x),
-                    50 + bottomRightList[i].y
+                    100 + bottomRightList[i].y
                 )
             }
             countDraw++
             xBottomCornerLeft = xTopLeft + bottomRightList[bottomRightList.size - 1].x
             yBottomCornerLeft = y!!
+            xBitmap = xTopLeft + bottomRightList[bottomRightList.size - 1].x / 2
             //        path.lineTo(xBottomCornerLeft, yBottomCornerLeft);
         }
         canvas!!.drawPath(path!!, paintTab)
