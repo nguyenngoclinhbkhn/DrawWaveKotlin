@@ -40,7 +40,7 @@ class DrawView : ImageView {
 
     private fun init() {
         paintTab.color = Color.RED
-        paintTab.strokeWidth = 5f
+        paintTab.strokeWidth = 15f
         paintTab.style = Paint.Style.STROKE
         paintTab.isDither = true // set the dither to true
         paintTab.strokeJoin = Paint.Join.ROUND // set the join to round you want
